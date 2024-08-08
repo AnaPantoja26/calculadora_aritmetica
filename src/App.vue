@@ -1,34 +1,39 @@
 <script setup>
-  let valor1 = 0
-  let valor2 = 0
-  const operacao = ''
-  const resultado = 0
+  import {ref, watch} from 'vue';
+
+  const valor1 = ref (0);
+  const valor2 = ref (0);
+  const operacao = ref ('');
+  const resultado = ref (null);
 
   function calcular() {
-    const num1 = parseFloat(this.valor1);
-    const num2 = parseFloat(this.valor2);
-  switch (this.operacao) {
+    const num1 = parseFloat(valor1.value);
+    const num2 = parseFloat(valor2.value);
+
+  switch (operacao.value) {
     case '+':
-        this.resultado = num1 + num2;
+        resultado.value = num1 + num2;
       break;
     case '-':
-        this.resultado = num1 - num2;
+        resultado.value = num1 - num2;
       break;
     case '*':
-        this.resultado = num1 * num2;
+        resultado.value = num1 * num2;
       break;
       case '/':
         if (num2 === 0) {
-          this.resultado = 'Não é possível dividir por zero.';          
+          resultado.value = 'Não é possível dividir por zero.';          
         } else {
-        this.resultado = num1 / num2;
+          resultado.value = num1 / num2;
         }
       break;
     default:
-        this.resultado = 'Operação inválida';
+        resultado.value = 'Operação inválida';
       break;
     }
-  };
+  }
+
+  watch([valor1, valor2, operacao], calcular);
 </script>
 
 <template>
@@ -36,6 +41,7 @@
     <div class="input-container">
       <input type="number" v-model.number="valor1" placeholder="Digite o primeiro valor">
       <select v-model="operacao">
+        <option value="">Escolha a operação</option>
         <option value="+">+</option>
         <option value="-">-</option>
         <option value="*">*</option>
@@ -43,7 +49,6 @@
       </select>
       <input type="number" v-model.number="valor2" placeholder="Digite o segundo valor">
     </div>
-    <button @click="calcular">Calcular</button>
     <div v-if="resultado !== null" class="resultado">
       Resultado: {{ resultado }}
     </div>
@@ -52,10 +57,11 @@
 
 <style scoped>
   .calculadora {
+      background-color: rgb(219, 215, 215) ;
       max-width: 520px;
       margin: 100px auto;
       padding: 20px;
-      border: 1px solid #ccc;
+      border: 1px solid #000;
       border-radius: 5px;
       text-align: center;
     }
